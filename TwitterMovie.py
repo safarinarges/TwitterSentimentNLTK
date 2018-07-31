@@ -46,10 +46,10 @@ short_neg = open ("short_reviews/negative.txt", "r").read()
 documents = []
 
 for k in short_pos.split('\n'):
-    documents.append(k,"pos")
+    documents.append( (k,"pos") )
     
 for k in short_neg.split('\n'):
-    documents.append(k, "neg")
+    documents.append( (k, "neg") )
 
 
 all_words = []
@@ -68,6 +68,56 @@ for w in short_neg_words:
 all_words = nltk.FreqDist (all_words)
 
 word_features = list (all_words.keys())[:5000]
+
+def find_features(document):
+    words = word_tokenize(document)
+    features = {}
+    for w in word_features:
+        features [w] = (w in words)
+        
+    return features
+
+ 
+features_set = [(find_features (rev), category) for (rev, category) in documents]
+
+random.shuffle(features_set)
+
+training = features_set[:10000]
+testing = features_set[10000:]
+
+Naiv_classifier = nltk.NaiveBayesClassifier.train(training)
+print("Naive Bays Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(Naiv_classifier, testing))*100)
+Naiv_classifier.show_most_informative_features(7)
+
+MultinomialNB_classifier = SklearnClassifier(MultinomialNB())
+MultinomialNB_classifier.train(training)
+print("MultinomialNB Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(MultinomialNB_classifier, testing))*100)
+
+BernoulliNB_classifier = SklearnClassifier(BernoulliNB())
+BernoulliNB_classifier.train(training)
+print("BernoulliNB Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(BernoulliNB_classifier, testing))*100)
+
+LogisticRegression_classifier = SklearnClassifier(LogisticRegression())
+LogisticRegression_classifier.train(training)
+print("LogisticRegression Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(LogisticRegression_classifier, testing))*100)
+
+SGDClassifier_classifier = SklearnClassifier(SGDClassifier())
+SGDClassifier_classifier.train(training)
+print("SGDClassifier Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(SGDClassifier_classifier, testing))*100)
+
+SVC_classifier = SklearnClassifier(SVC())
+SVC_classifier.train(training)
+print("SVC Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(SVC_classifier, testing))*100)
+
+#LinearSVC_classifier = SklearnClassifier(LinearSVC())
+#LinearSVC_classifier.train(training)
+#print("LinearSVC Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(LinearSVC, testing))*100)
+
+NuSVC_classifier = SklearnClassifier(NuSVC())
+NuSVC_classifier.train(training)
+print("NuSVC Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(NuSVC, testing))*100)
+
+
 
 
 
