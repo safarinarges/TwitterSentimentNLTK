@@ -10,6 +10,7 @@ import nltk
 from nltk.classify.scikitlearn import SklearnClassifier
 import random
 import pickle
+import io
 from sklearn.naive_bayes import MultinomialNB, BernoulliNB
 from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.svm import SVC, LinearSVC, NuSVC
@@ -39,9 +40,9 @@ class VoteClassifier (ClassifierI):
         choice_value = votes.count(mode(votes))
         conf = choice_value / len (votes)
         return conf
-    
-short_pos = open ("short_reviews/positive.txt", "r").read()
-short_neg = open ("short_reviews/negative.txt", "r").read()
+#io.open(filename, encoding='latin-1')
+short_pos = io.open ("short_reviews/positive.txt", encoding='latin-1').read()
+short_neg = io.open ("short_reviews/negative.txt", encoding='latin-1').read()
 
 documents = []
 
@@ -86,8 +87,21 @@ training = features_set[:10000]
 testing = features_set[10000:]
 
 Naiv_classifier = nltk.NaiveBayesClassifier.train(training)
+
+#Save the classifier
+#save_classifier = open("naivebayes.pickle","wb")
+#pickle.dump(Naiv_classifier, save_classifier)
+#save_classifier.close()
+
+classifier_Naiv = open("naivebayes.pickle","rb")
+Naiv_classifier = pickle.load(classifier_Naiv)
+classifier_Naiv.close()
+
+
 print("Naive Bays Classifier ALgorithm Accuracy Percentage is:", (nltk.classify.accuracy(Naiv_classifier, testing))*100)
 Naiv_classifier.show_most_informative_features(7)
+
+
 
 MultinomialNB_classifier = SklearnClassifier(MultinomialNB())
 MultinomialNB_classifier.train(training)
