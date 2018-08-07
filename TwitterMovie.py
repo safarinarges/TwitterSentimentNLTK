@@ -3,9 +3,6 @@
 @author: Narges
 """
 
-# =============================================================================
-# Dont forget to pickle your classifier
-# =============================================================================
 import nltk
 from nltk.classify.scikitlearn import SklearnClassifier
 import random
@@ -40,7 +37,10 @@ class VoteClassifier (ClassifierI):
         choice_value = votes.count(mode(votes))
         conf = choice_value / len (votes)
         return conf
-#io.open(filename, encoding='latin-1')
+#short_pos = open ("short_reviews/positive.txt", "r").read()
+#short_neg = open ("short_reviews/negative.txt", "r").read()
+
+##io.open(filename, encoding='latin-1')
 short_pos = io.open ("short_reviews/positive.txt", encoding='latin-1').read()
 short_neg = io.open ("short_reviews/negative.txt", encoding='latin-1').read()
 
